@@ -1,12 +1,13 @@
 import datetime
 import functools
 import os
+import re
 import time
 
 import vlc
 from PyQt5 import QtWidgets, QtGui
-from PyQt5.QtCore import QTimer, QEvent
-from PyQt5.QtWidgets import QFileDialog, QAction
+from PyQt5.QtCore import QTimer, QEvent, Qt
+from PyQt5.QtWidgets import QFileDialog, QAction, QLabel
 from py_translator import Translator
 
 import config
@@ -184,19 +185,30 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
             translated_subtitle_text_1 = self.translator.translate(subtitle.text, dest=config.OUTPUT_LANGUAGE).text
 
             # word by word translation
-            to_translate_list = subtitle.text.replace('\n', ' ').split()
+            clear_regex = re.compile("[^a-zA-Z\' ]")
+
+            to_translate_list = clear_regex.sub('', subtitle.text.replace('\n', ' ')).split()
             to_translate_str = '\n'.join(to_translate_list)
             translated_subtitle_text_2 = self.translator.translate(to_translate_str, dest=config.OUTPUT_LANGUAGE).text
-            translated_subtitle_text_2 = translated_subtitle_text_2.replace('\n', ' ')
+            # translated_subtitle_text_2 = translated_subtitle_text_2.replace('\n', ' ')
+
+            for n, word in enumerate(translated_subtitle_text_2.split('\n')):
+                label = QLabel(self.centralwidget)
+                label.setMaximumHeight(25)
+                label.setAlignment(Qt.AlignHCenter)
+                label.setText(to_translate_list[n] + ' : ' + word)
+                self.gridLayout.addWidget(label, n % 2, n // 2)
 
             self.subtitle_label_1.setText(translated_subtitle_text_1)
-            self.subtitle_label_2.setText(translated_subtitle_text_2)
+            # self.subtitle_label_2.setText(translated_subtitle_text_2)
         except:
             pass
 
     def hide_translation(self):
         self.subtitle_label_1.setText("")
-        self.subtitle_label_2.setText("")
+        # self.subtitle_label_2.setText("")
+        for i in reversed(range(self.gridLayout.count())):
+            self.gridLayout.itemAt(i).widget().setParent(None)
 
     def stop(self):
         self.media_player.stop()
