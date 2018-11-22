@@ -4,8 +4,8 @@ import os
 import time
 
 import vlc
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTimer
+from PyQt5 import QtWidgets, QtGui
+from PyQt5.QtCore import QTimer, QEvent
 from PyQt5.QtWidgets import QFileDialog, QAction
 from py_translator import Translator
 
@@ -46,6 +46,30 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
         self.subtitles = None
 
         self.translator = Translator()
+
+        QtWidgets.qApp.installEventFilter(self)
+
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.KeyPress and type(source) == QtGui.QWindow:
+            if event.key() == 16777236:  # right arrow
+                self.move_forward()
+            if event.key() == 16777234:  # left arrow
+                self.move_forward()
+            if event.key() == 32:  # space
+                self.play_pause()
+        return super(PlayerApplication, self).eventFilter(source, event)
+
+    def move_forward(self):
+        player_time = self.media_player.get_time()
+        if player_time != -1:
+            self.media_player.set_time(player_time + config.FORWARD_TIME)
+
+    def move_backward(self):
+        player_time = self.media_player.get_time()
+        if player_time != -1:
+            new_time = player_time - config.FORWARD_TIME
+            new_time = new_time if new_time > 0 else 0
+            self.media_player.set_time(new_time)
 
     def open_file(self, filename=None):
         """

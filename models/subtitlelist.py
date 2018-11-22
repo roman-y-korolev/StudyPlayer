@@ -65,4 +65,3 @@ class SubtitleList:
             else:
                 is_found = True
         return current_subtitle
-
