@@ -1,0 +1,4 @@
+venv/*
+.idea/
+movies/
+**/__pycache__/*
