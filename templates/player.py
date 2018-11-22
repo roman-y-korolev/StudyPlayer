@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'player.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -25,11 +25,17 @@ class Ui_MainWindow(object):
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setSizeConstraint(QtWidgets.QLayout.SetMaximumSize)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.subtitle_label = QtWidgets.QLabel(self.centralwidget)
-        self.subtitle_label.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.subtitle_label.setText("")
-        self.subtitle_label.setObjectName("subtitle_label")
-        self.verticalLayout_2.addWidget(self.subtitle_label)
+        self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.subtitle_label_1 = QtWidgets.QLabel(self.centralwidget)
+        self.subtitle_label_1.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.subtitle_label_1.setObjectName("subtitle_label_1")
+        self.horizontalLayout_2.addWidget(self.subtitle_label_1)
+        self.subtitle_label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.subtitle_label_2.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.subtitle_label_2.setObjectName("subtitle_label_2")
+        self.horizontalLayout_2.addWidget(self.subtitle_label_2)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_2)
         self.play_slider = QtWidgets.QSlider(self.centralwidget)
         self.play_slider.setOrientation(QtCore.Qt.Horizontal)
         self.play_slider.setObjectName("play_slider")
@@ -72,6 +78,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.subtitle_label_1.setText(_translate("MainWindow", "1"))
+        self.subtitle_label_2.setText(_translate("MainWindow", "2"))
         self.play_button.setText(_translate("MainWindow", "Play/Pause"))
         self.menu_File.setTitle(_translate("MainWindow", "&File"))
         self.menu_Audio.setTitle(_translate("MainWindow", "&Audio"))

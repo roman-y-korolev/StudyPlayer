@@ -152,10 +152,21 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
                                             microsecond=ms).time()
 
             subtitle = self.subtitles.get_subtitle(player_time)
-            translated_subtitle_text = self.translator.translate(subtitle.text, dest=config.OUTPUT_LANGUAGE).text
-            self.subtitle_label.setText(translated_subtitle_text)
+
+            # full phrase translation
+            translated_subtitle_text_1 = self.translator.translate(subtitle.text, dest=config.OUTPUT_LANGUAGE).text
+
+            # word by word translation
+            to_translate_list = subtitle.text.replace('\n', ' ').split()
+            to_translate_str = '\n'.join(to_translate_list)
+            translated_subtitle_text_2 = self.translator.translate(to_translate_str, dest=config.OUTPUT_LANGUAGE).text
+            translated_subtitle_text_2 = translated_subtitle_text_2.replace('\n', ' ')
+
+            self.subtitle_label_1.setText(translated_subtitle_text_1)
+            self.subtitle_label_2.setText(translated_subtitle_text_2)
         else:
-            self.subtitle_label.setText("")
+            self.subtitle_label_1.setText("")
+            self.subtitle_label_2.setText("")
             if self.media_player.play() == -1:
                 self.open_file()
                 return
