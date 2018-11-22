@@ -50,11 +50,17 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
         QtWidgets.qApp.installEventFilter(self)
 
     def eventFilter(self, source, event):
+        """
+        Overwrite eventFilter to catch key events
+        :param source: Widget
+        :param event: Event
+        :return: None
+        """
         if event.type() == QEvent.KeyPress and type(source) == QtGui.QWindow:
             if event.key() == 16777236:  # right arrow
                 self.move_forward()
             if event.key() == 16777234:  # left arrow
-                self.move_forward()
+                self.move_backward()
             if event.key() == 32:  # space
                 self.play_pause()
         return super(PlayerApplication, self).eventFilter(source, event)
@@ -153,17 +159,20 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
 
             subtitle = self.subtitles.get_subtitle(player_time)
 
-            # full phrase translation
-            translated_subtitle_text_1 = self.translator.translate(subtitle.text, dest=config.OUTPUT_LANGUAGE).text
+            try:
+                # full phrase translation
+                translated_subtitle_text_1 = self.translator.translate(subtitle.text, dest=config.OUTPUT_LANGUAGE).text
 
-            # word by word translation
-            to_translate_list = subtitle.text.replace('\n', ' ').split()
-            to_translate_str = '\n'.join(to_translate_list)
-            translated_subtitle_text_2 = self.translator.translate(to_translate_str, dest=config.OUTPUT_LANGUAGE).text
-            translated_subtitle_text_2 = translated_subtitle_text_2.replace('\n', ' ')
+                # word by word translation
+                to_translate_list = subtitle.text.replace('\n', ' ').split()
+                to_translate_str = '\n'.join(to_translate_list)
+                translated_subtitle_text_2 = self.translator.translate(to_translate_str, dest=config.OUTPUT_LANGUAGE).text
+                translated_subtitle_text_2 = translated_subtitle_text_2.replace('\n', ' ')
 
-            self.subtitle_label_1.setText(translated_subtitle_text_1)
-            self.subtitle_label_2.setText(translated_subtitle_text_2)
+                self.subtitle_label_1.setText(translated_subtitle_text_1)
+                self.subtitle_label_2.setText(translated_subtitle_text_2)
+            except:
+                pass
         else:
             self.subtitle_label_1.setText("")
             self.subtitle_label_2.setText("")
