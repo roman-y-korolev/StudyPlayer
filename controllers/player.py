@@ -49,6 +49,8 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
 
         QtWidgets.qApp.installEventFilter(self)
 
+        self.setWindowIcon(QtGui.QIcon('assets/icon.png'))
+
     def eventFilter(self, source, event):
         """
         Overwrite eventFilter to catch key events
@@ -147,35 +149,9 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
         if self.media_player.is_playing():
             self.media_player.pause()
             self.is_play = False
-
-            player_time_ms = self.media_player.get_time()
-            player_time_ms = player_time_ms if player_time_ms > 0 else 0
-            ms = player_time_ms % 1000 * 1000
-            seconds = (player_time_ms // 1000) % 60
-            minutes = ((player_time_ms // 1000) // 60) % 60
-            hours = (((player_time_ms // 1000) // 60) // 60) % 24
-            player_time = datetime.datetime(year=2018, month=1, day=1, hour=hours, minute=minutes, second=seconds,
-                                            microsecond=ms).time()
-
-            subtitle = self.subtitles.get_subtitle(player_time)
-
-            try:
-                # full phrase translation
-                translated_subtitle_text_1 = self.translator.translate(subtitle.text, dest=config.OUTPUT_LANGUAGE).text
-
-                # word by word translation
-                to_translate_list = subtitle.text.replace('\n', ' ').split()
-                to_translate_str = '\n'.join(to_translate_list)
-                translated_subtitle_text_2 = self.translator.translate(to_translate_str, dest=config.OUTPUT_LANGUAGE).text
-                translated_subtitle_text_2 = translated_subtitle_text_2.replace('\n', ' ')
-
-                self.subtitle_label_1.setText(translated_subtitle_text_1)
-                self.subtitle_label_2.setText(translated_subtitle_text_2)
-            except:
-                pass
+            self.show_translation()
         else:
-            self.subtitle_label_1.setText("")
-            self.subtitle_label_2.setText("")
+            self.hide_translation()
             if self.media_player.play() == -1:
                 self.open_file()
                 return
@@ -190,6 +166,37 @@ class PlayerApplication(QtWidgets.QMainWindow, PlayerWindow):
             self.timer.stop()
             if self.is_play:
                 self.stop()
+
+    def show_translation(self):
+        player_time_ms = self.media_player.get_time()
+        player_time_ms = player_time_ms if player_time_ms > 0 else 0
+        ms = player_time_ms % 1000 * 1000
+        seconds = (player_time_ms // 1000) % 60
+        minutes = ((player_time_ms // 1000) // 60) % 60
+        hours = (((player_time_ms // 1000) // 60) // 60) % 24
+        player_time = datetime.datetime(year=2018, month=1, day=1, hour=hours, minute=minutes, second=seconds,
+                                        microsecond=ms).time()
+
+        subtitle = self.subtitles.get_subtitle(player_time)
+
+        try:
+            # full phrase translation
+            translated_subtitle_text_1 = self.translator.translate(subtitle.text, dest=config.OUTPUT_LANGUAGE).text
+
+            # word by word translation
+            to_translate_list = subtitle.text.replace('\n', ' ').split()
+            to_translate_str = '\n'.join(to_translate_list)
+            translated_subtitle_text_2 = self.translator.translate(to_translate_str, dest=config.OUTPUT_LANGUAGE).text
+            translated_subtitle_text_2 = translated_subtitle_text_2.replace('\n', ' ')
+
+            self.subtitle_label_1.setText(translated_subtitle_text_1)
+            self.subtitle_label_2.setText(translated_subtitle_text_2)
+        except:
+            pass
+
+    def hide_translation(self):
+        self.subtitle_label_1.setText("")
+        self.subtitle_label_2.setText("")
 
     def stop(self):
         self.media_player.stop()
