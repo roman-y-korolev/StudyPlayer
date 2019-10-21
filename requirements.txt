@@ -12,4 +12,4 @@ python-vlc==3.0.4106
 requests==2.20.1
 six==1.11.0
 Unidecode==1.0.23
-urllib3==1.24.1
+urllib3==1.24.2
